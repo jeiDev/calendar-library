@@ -15,6 +15,7 @@ let parameter = {
 }
 
 let calendar = new Calendar(parameter)
+calendar.create()
 
 ###### Parameters
 * background = Main color of the calendar
