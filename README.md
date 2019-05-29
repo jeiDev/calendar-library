@@ -14,8 +14,8 @@ let parameter = {
   type: "modal-selected"
 }
 
-let calendar = new Calendar(parameter)
-calendar.create()
+####### let calendar = new Calendar(parameter)
+####### calendar.create()
 
 ###### Parameters
 * background = Main color of the calendar
