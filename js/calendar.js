@@ -3,6 +3,8 @@ class Calendar {
         this.saveDate = []
         this.filterDate = {}
         this.contentCalendarMain = null
+        this.monthYear = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+        this.nameDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
         this.background = data ? data.background ? data.background : "#0770aa" : "#0770aa"
         this.fontFamily = data ? data.fontFamily ? data.fontFamily : "Arial, Helvetica, sans-serif" : "Arial, Helvetica, sans-serif"
         this.clicks = {
@@ -21,16 +23,12 @@ class Calendar {
         let headerCalendarMain = dom("div", mainCalendar)
         this.contentCalendarMain = dom("div", mainCalendar)
         let footerCalendar = dom("div", col2)
-        let days = ["S", "M", "T", "W", "T", "F", "S"]
-        let monthYear = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-        let abvDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
         let btns = ["CANCEL", "OK"]
         let date = new Date()
         let back = dom("i", headerCalendar)
         let text = dom("div", headerCalendar)
         let next = dom("i", headerCalendar)
-        let width;
-
+ 
         contentCalendar.classList.add("content-calendar")
         boxCalendar.classList.add("box")
         col1.classList.add("col1")
@@ -54,7 +52,7 @@ class Calendar {
             paddingLeft: "20px"
         })
         
-        text.setHTML(`${monthYear[date.getMonth()]} ${date.getFullYear()}`)
+        text.setHTML(`${this.monthYear[date.getMonth()]} ${date.getFullYear()}`)
 
         next.attr({
             className: "fas fa-chevron-right"
@@ -64,33 +62,12 @@ class Calendar {
 
         next.onclick = () => {
             date.setMonth(date.getMonth() + 1)
-            animation(true)
+            this.animation(true, date, text)
         }
 
         back.onclick = () => {
             date.setMonth(date.getMonth() - 1)
-            animation(false)
-        }
-
-        function animation(type) {
-            text.setHTML(`${monthYear[date.getMonth()]} ${date.getFullYear()}`)
-            width = this.contentCalendarMain.clientWidth
-            this.contentCalendarMain.style.opacity = 0
-            this.contentCalendarMain.style.left = `${type ? -width : width}px`
-            setTimeout(() => {
-                this.contentCalendarMain.style.left = `${type ? width * 2 : -width * 2}px`
-                this.contentCalendarMain.innerHTML = ""
-                this.newDate({
-                    year: date.getFullYear(),
-                    month: date.getMonth(),
-                    day: date.getDate()
-                })
-
-                setTimeout(() => {
-                    this.contentCalendarMain.style.opacity = 1
-                    this.contentCalendarMain.style.left = `0px`
-                }, 100)
-            }, 400)
+            this.animation(false, date, text)
         }
 
         /* Start Col 1 */
@@ -101,14 +78,14 @@ class Calendar {
             fontSize: "1.2em"
         })
 
-        dom("div", col1).setHTML(`${abvDays[date.getDay()]},`).attr({
+        dom("div", col1).setHTML(`${this.nameDays[date.getDay()].substr(0,3)},`).attr({
             id: "dayCalendar"
         }).css({
             color: "white",
             fontSize: "3em"
         })
 
-        dom("div", col1).setHTML(`${monthYear[date.getMonth()].substr(0, 4)} ${date.getDate()}`).attr({
+        dom("div", col1).setHTML(`${this.monthYear[date.getMonth()].substr(0, 4)} ${date.getDate()}`).attr({
             id: "monthCalendar"
         }).css({
             color: "white",
@@ -117,9 +94,9 @@ class Calendar {
 
         /* End Col 1 */
         // SHOW DAYS
-        days.forEach(day => {
+        this.nameDays.forEach(day => {
             this.createBoxCalendar({
-                value: day,
+                value: day.substr(0,1),
                 color: this.background,
                 parent: headerCalendarMain,
                 bold: "500",
@@ -357,6 +334,28 @@ class Calendar {
                 this.saveDate.push(code)
             }
         })
+    }
+
+    animation(type, date, text) {
+        let width;
+        text.setHTML(`${this.monthYear[date.getMonth()]} ${date.getFullYear()}`)
+        width = this.contentCalendarMain.clientWidth
+        this.contentCalendarMain.style.opacity = 0
+        this.contentCalendarMain.style.left = `${type ? -width : width}px`
+        setTimeout(() => {
+            this.contentCalendarMain.style.left = `${type ? width * 2 : -width * 2}px`
+            this.contentCalendarMain.innerHTML = ""
+            this.newDate({
+                year: date.getFullYear(),
+                month: date.getMonth(),
+                day: date.getDate()
+            })
+
+            setTimeout(() => {
+                this.contentCalendarMain.style.opacity = 1
+                this.contentCalendarMain.style.left = `0px`
+            }, 100)
+        }, 400)
     }
 
     getDayOfMonth = (month, year) => (new Date(year, month + 1, 0).getDate())
