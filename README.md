@@ -14,7 +14,7 @@ let parameter = {
   type: "modal-selected"
 }
 
-let calendar = new Calendar(parameter);
+let calendar = new Calendar(parameter);a__
 calendar.create();
 
 ###### Parameters
